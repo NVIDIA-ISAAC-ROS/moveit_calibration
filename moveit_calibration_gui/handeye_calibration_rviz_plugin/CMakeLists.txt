@@ -17,12 +17,14 @@ set(SOURCE_FILES_PLUGINS
   src/plugin_init.cpp
 )
 
-# Qt Stuff
-find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
-set(QT_LIBRARIES Qt5::Widgets)
-macro(qt_wrap_ui)
-  qt5_wrap_ui(${ARGN})
-endmacro()
+# Qt Stuff: use the same Qt major version as rviz_common (Qt6 from Lyrical on, Qt5 before)
+if(TARGET Qt6::Widgets)
+  find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+  set(QT_LIBRARIES Qt6::Widgets)
+else()
+  find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
+  set(QT_LIBRARIES Qt5::Widgets)
+endif()
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)

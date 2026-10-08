@@ -164,7 +164,7 @@ ControlTabWidget::ControlTabWidget(rclcpp::Node::SharedPtr node, HandEyeCalibrat
   setting_layout_top->addRow("AX=XB Solver", calibration_solver_);
 
   group_name_ = new QComboBox();
-  connect(group_name_, SIGNAL(activated(const QString&)), this, SLOT(planningGroupNameChanged(const QString&)));
+  connect(group_name_, SIGNAL(textActivated(const QString&)), this, SLOT(planningGroupNameChanged(const QString&)));
   setting_layout_top->addRow("Planning Group", group_name_);
 
   load_joint_state_btn_ = new QPushButton("Load joint states");
@@ -1032,7 +1032,7 @@ void ControlTabWidget::loadJointStateBtnClicked([[maybe_unused]] bool clicked)
 void ControlTabWidget::autoPlanBtnClicked([[maybe_unused]] bool clicked)
 {
   auto_plan_btn_->setEnabled(false);
-  plan_watcher_->setFuture(QtConcurrent::run(this, &ControlTabWidget::computePlan));
+  plan_watcher_->setFuture(QtConcurrent::run([this] { computePlan(); }));
 }
 
 void ControlTabWidget::computePlan()
@@ -1105,7 +1105,7 @@ void ControlTabWidget::autoExecuteBtnClicked([[maybe_unused]] bool clicked)
   }
 
   auto_execute_btn_->setEnabled(false);
-  execution_watcher_->setFuture(QtConcurrent::run(this, &ControlTabWidget::computeExecution));
+  execution_watcher_->setFuture(QtConcurrent::run([this] { computeExecution(); }));
 }
 
 void ControlTabWidget::computeExecution()
